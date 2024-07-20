@@ -46,5 +46,21 @@
     </div>
 
     <script type="module" src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js');
+        }
+
+        fetch('/manifest.json')
+            .then(response => response.json())
+            .then(manifest => {
+                manifest.start_url = window.location.href;
+                const stringManifest = JSON.stringify(manifest);
+                const blob = new Blob([stringManifest], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const link = document.querySelector('link[rel="manifest"]');
+                link.setAttribute('href', url);
+            });
+    </script>
 </body>
 </html>
