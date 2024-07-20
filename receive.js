@@ -62,6 +62,7 @@ function loadMessages() {
         const messageId = snapshot.key;
         displayMessage(messageId, messageData.text);
         playNotificationSound();
+        showNotification(messageData.text);
         notifyServiceWorker();
     });
 }
@@ -80,6 +81,24 @@ function playNotificationSound() {
     notificationSound.play().catch(error => {
         console.error("Erro ao reproduzir o som de notificação:", error);
     });
+}
+
+function showNotification(message) {
+    if (Notification.permission === 'granted') {
+        new Notification('Nova mensagem', {
+            body: message,
+            icon: 'https://i.ibb.co/jZ6rbSp/logo-cabana.png'
+        });
+    } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                new Notification('Nova mensagem', {
+                    body: message,
+                    icon: 'https://i.ibb.co/jZ6rbSp/logo-cabana.png'
+                });
+            }
+        });
+    }
 }
 
 function notifyServiceWorker() {
