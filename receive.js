@@ -9,15 +9,20 @@ const logoutButton = document.getElementById('logoutButton');
 const deleteAllButton = document.getElementById('deleteAllButton');
 const notificationSound = document.getElementById('notificationSound');
 
-// Reproduz o som de notificação assim que a página for carregada
+// Solicita permissão para notificações e toca o som após a primeira interação do usuário
 document.addEventListener('DOMContentLoaded', () => {
-    // Tentar tocar o som logo que a página for carregada
-    notificationSound.play().then(() => {
-        notificationSound.pause();
-        notificationSound.currentTime = 0;
-    }).catch(error => {
-        console.log('Erro ao solicitar permissão para reproduzir som:', error);
-    });
+    document.body.addEventListener('click', () => {
+        notificationSound.play().then(() => {
+            notificationSound.pause();
+            notificationSound.currentTime = 0;
+        }).catch(error => {
+            console.log('Erro ao solicitar permissão para reproduzir som:', error);
+        });
+
+        if (Notification.permission !== 'granted') {
+            Notification.requestPermission();
+        }
+    }, { once: true });
 });
 
 // Lógica de Login
