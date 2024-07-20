@@ -77,7 +77,8 @@ function displayMessage(messageId, message) {
 }
 
 function playNotificationSound() {
-    notificationSound.play().catch(error => {
+    const audio = document.getElementById('notificationSound');
+    audio.play().catch(error => {
         console.error("Erro ao reproduzir o som de notificação:", error);
     });
 }
