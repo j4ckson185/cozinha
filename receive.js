@@ -1,11 +1,12 @@
 // receive.js
-import { database, ref, onChildAdded, auth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from './firebase-config.js';
+import { database, ref, onChildAdded, remove, auth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from './firebase-config.js';
 
 const loginForm = document.getElementById('loginForm');
 const authDiv = document.getElementById('auth');
 const messagesSection = document.getElementById('messagesSection');
 const messagesDiv = document.getElementById('messages');
 const logoutButton = document.getElementById('logoutButton');
+const deleteAllButton = document.getElementById('deleteAllButton');
 
 // Lógica de Login
 loginForm.addEventListener('submit', (e) => {
@@ -30,6 +31,16 @@ logoutButton.addEventListener('click', () => {
     });
 });
 
+// Apagar todas as mensagens
+deleteAllButton.addEventListener('click', () => {
+    const messagesRef = ref(database, 'messages');
+    remove(messagesRef).then(() => {
+        messagesDiv.innerHTML = '';
+    }).catch((error) => {
+        alert('Erro ao apagar mensagens: ' + error.message);
+    });
+});
+
 // Verifica o estado de autenticação do usuário
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -47,12 +58,26 @@ function loadMessages() {
     messagesDiv.innerHTML = ''; // Limpa as mensagens existentes
     onChildAdded(messagesRef, (snapshot) => {
         const messageData = snapshot.val();
-        displayMessage(messageData.text);
+        const messageId = snapshot.key;
+        displayMessage(messageId, messageData.text);
     });
 }
 
-function displayMessage(message) {
-    const messageElement = document.createElement('p');
-    messageElement.textContent = message;
+function displayMessage(messageId, message) {
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message-item');
+    messageElement.innerHTML = `
+        <p>${message}</p>
+        <button class="deleteButton" onclick="deleteMessage('${messageId}')">x</button>
+    `;
     messagesDiv.appendChild(messageElement);
+}
+
+window.deleteMessage = function(messageId) {
+    const messageRef = ref(database, 'messages/' + messageId);
+    remove(messageRef).then(() => {
+        document.querySelector(`button[onclick="deleteMessage('${messageId}')"]`).parentElement.remove();
+    }).catch((error) => {
+        alert('Erro ao apagar mensagem: ' + error.message);
+    });
 }
