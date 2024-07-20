@@ -9,14 +9,9 @@ const logoutButton = document.getElementById('logoutButton');
 const deleteAllButton = document.getElementById('deleteAllButton');
 const notificationSound = document.getElementById('notificationSound');
 
-// Solicita permissão para reproduzir som no iOS
+// Reproduz o som de notificação assim que a página for carregada
 document.addEventListener('DOMContentLoaded', () => {
-    notificationSound.play().then(() => {
-        notificationSound.pause();
-        notificationSound.currentTime = 0;
-    }).catch(error => {
-        console.log('Erro ao solicitar permissão para reproduzir som:', error);
-    });
+    playNotificationSound();
 });
 
 // Lógica de Login
@@ -73,7 +68,6 @@ function loadMessages() {
         displayMessage(messageId, messageData.text);
         playNotificationSound();
         showNotification(messageData.text);
-        notifyServiceWorker();
     });
 }
 
@@ -98,23 +92,6 @@ function showNotification(message) {
         new Notification('Nova mensagem', {
             body: message,
             icon: 'https://i.ibb.co/jZ6rbSp/logo-cabana.png'
-        });
-    } else if (Notification.permission !== 'denied') {
-        Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-                new Notification('Nova mensagem', {
-                    body: message,
-                    icon: 'https://i.ibb.co/jZ6rbSp/logo-cabana.png'
-                });
-            }
-        });
-    }
-}
-
-function notifyServiceWorker() {
-    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage({
-            type: 'PLAY_SOUND'
         });
     }
 }
