@@ -62,6 +62,7 @@ function loadMessages() {
         const messageId = snapshot.key;
         displayMessage(messageId, messageData.text);
         playNotificationSound();
+        notifyServiceWorker();
     });
 }
 
@@ -79,6 +80,14 @@ function playNotificationSound() {
     notificationSound.play().catch(error => {
         console.error("Erro ao reproduzir o som de notificação:", error);
     });
+}
+
+function notifyServiceWorker() {
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+            type: 'PLAY_SOUND'
+        });
+    }
 }
 
 window.deleteMessage = function(messageId) {
