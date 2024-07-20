@@ -13,13 +13,12 @@ self.addEventListener('fetch', (event) => {
 
 self.addEventListener('message', (event) => {
     if (event.data && event.data.type === 'PLAY_SOUND') {
-        playNotificationSound();
+        clients.matchAll({ includeUncontrolled: true, type: 'window' }).then(clients => {
+            clients.forEach(client => {
+                client.postMessage({
+                    type: 'PLAY_SOUND'
+                });
+            });
+        });
     }
 });
-
-function playNotificationSound() {
-    const audio = new Audio('assets/notification.mp3');
-    audio.play().catch(error => {
-        console.error('Erro ao reproduzir o som de notificação:', error);
-    });
-}
