@@ -95,14 +95,15 @@ button:hover {
 }
 
 .deleteButton {
-    background-color: #dc3545;
+    background-color: transparent;
     border: none;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
+    color: #dc3545;
+    font-size: 16px;
     cursor: pointer;
+    padding: 0;
+    margin-left: 10px;
 }
 
 .deleteButton:hover {
-    background-color: #c82333;
+    color: #c82333;
 }
