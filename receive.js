@@ -11,7 +11,13 @@ const notificationSound = document.getElementById('notificationSound');
 
 // Reproduz o som de notificação assim que a página for carregada
 document.addEventListener('DOMContentLoaded', () => {
-    playNotificationSound();
+    // Tentar tocar o som logo que a página for carregada
+    notificationSound.play().then(() => {
+        notificationSound.pause();
+        notificationSound.currentTime = 0;
+    }).catch(error => {
+        console.log('Erro ao solicitar permissão para reproduzir som:', error);
+    });
 });
 
 // Lógica de Login
@@ -104,10 +110,3 @@ window.deleteMessage = function(messageId) {
         alert('Erro ao apagar mensagem: ' + error.message);
     });
 }
-
-// Ouvir mensagens do Service Worker
-navigator.serviceWorker.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'PLAY_SOUND') {
-        playNotificationSound();
-    }
-});
