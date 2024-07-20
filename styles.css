@@ -78,10 +78,31 @@ button:hover {
     display: none;
 }
 
-#logoutButton {
+#logoutButton, #deleteAllButton {
     background-color: #dc3545;
 }
 
-#logoutButton:hover {
+#logoutButton:hover, #deleteAllButton:hover {
+    background-color: #c82333;
+}
+
+.message-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.deleteButton {
+    background-color: #dc3545;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.deleteButton:hover {
     background-color: #c82333;
 }
