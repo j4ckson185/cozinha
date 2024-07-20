@@ -1,9 +1,10 @@
 // receive.js
-import { database } from './firebase-config.js';
+import { database, ref, onChildAdded } from './firebase-config.js';
 
 const messagesDiv = document.getElementById('messages');
+const messagesRef = ref(database, 'messages');
 
-database.ref('messages').on('child_added', (snapshot) => {
+onChildAdded(messagesRef, (snapshot) => {
     const messageData = snapshot.val();
     displayMessage(messageData.text);
 });
