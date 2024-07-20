@@ -1,7 +1,7 @@
 {
     "name": "Cabana Açaí",
     "short_name": "Cabana Açaí",
-    "start_url": "/index.html",
+    "start_url": "/index.html?source=pwa",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#ffffff",
