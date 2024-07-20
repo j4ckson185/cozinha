@@ -9,6 +9,16 @@ const logoutButton = document.getElementById('logoutButton');
 const deleteAllButton = document.getElementById('deleteAllButton');
 const notificationSound = document.getElementById('notificationSound');
 
+// Solicita permissão para reproduzir som no iOS
+document.addEventListener('DOMContentLoaded', () => {
+    notificationSound.play().then(() => {
+        notificationSound.pause();
+        notificationSound.currentTime = 0;
+    }).catch(error => {
+        console.log('Erro ao solicitar permissão para reproduzir som:', error);
+    });
+});
+
 // Lógica de Login
 loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
