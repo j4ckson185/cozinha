@@ -77,8 +77,7 @@ function displayMessage(messageId, message) {
 }
 
 function playNotificationSound() {
-    const audio = document.getElementById('notificationSound');
-    audio.play().catch(error => {
+    notificationSound.play().catch(error => {
         console.error("Erro ao reproduzir o som de notificação:", error);
     });
 }
@@ -99,3 +98,10 @@ window.deleteMessage = function(messageId) {
         alert('Erro ao apagar mensagem: ' + error.message);
     });
 }
+
+// Ouvir mensagens do Service Worker
+navigator.serviceWorker.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'PLAY_SOUND') {
+        playNotificationSound();
+    }
+});
