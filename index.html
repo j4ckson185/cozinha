@@ -26,7 +26,7 @@
         </div>
 
         <div id="messagesSection" style="display:none;">
-            <h1>Prioridades</h1>
+            <h1>Mensagens Recebidas</h1>
             <div id="messages"></div>
             <button id="deleteAllButton">Apagar todos</button>
             <button id="logoutButton">Sair</button>
@@ -38,8 +38,15 @@
     <script type="module" src="receive.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js');
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(registration => {
+                    console.log('Service Worker registrado com sucesso:', registration);
+                })
+                .catch(error => {
+                    console.log('Falha ao registrar o Service Worker:', error);
+                });
         }
     </script>
 </body>
 </html>
+
