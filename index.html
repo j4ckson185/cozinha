@@ -51,22 +51,33 @@
             navigator.serviceWorker.register('/service-worker.js');
         }
 
-        if (window.location.search.includes('source=pwa')) {
-            const currentUrl = new URL(window.location.href);
-            const newUrl = currentUrl.origin + currentUrl.pathname + currentUrl.hash + currentUrl.search.replace('source=pwa', '');
-            window.location.replace(newUrl);
-        } else {
-            fetch('/manifest.json')
-                .then(response => response.json())
-                .then(manifest => {
-                    manifest.start_url = window.location.href;
-                    const stringManifest = JSON.stringify(manifest);
-                    const blob = new Blob([stringManifest], {type: 'application/json'});
-                    const url = URL.createObjectURL(blob);
-                    const link = document.querySelector('link[rel="manifest"]');
-                    link.setAttribute('href', url);
+        window.addEventListener('load', () => {
+            const currentUrl = window.location.href;
+            if (currentUrl.includes('#')) {
+                const url = currentUrl.split('#')[1];
+                if (url) {
+                    window.location.href = url;
+                }
+            }
+        });
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            const deferredPrompt = e;
+            const addBtn = document.createElement('button');
+            addBtn.textContent = 'Adicionar à tela inicial';
+            document.body.appendChild(addBtn);
+            addBtn.addEventListener('click', () => {
+                const hashUrl = window.location.href;
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        window.location.hash = hashUrl;
+                    }
+                    deferredPrompt = null;
                 });
-        }
+            });
+        });
     </script>
 </body>
 </html>
