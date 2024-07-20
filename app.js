@@ -1,4 +1,6 @@
 // app.js
+import { database, ref, push } from './firebase-config.js';
+
 const messageForm = document.getElementById('messageForm');
 
 messageForm.addEventListener('submit', (e) => {
@@ -8,7 +10,8 @@ messageForm.addEventListener('submit', (e) => {
 });
 
 function sendMessage(message) {
-    const newMessageRef = database.ref('messages').push();
+    const messagesRef = ref(database, 'messages');
+    const newMessageRef = push(messagesRef);
     newMessageRef.set({
         text: message,
         timestamp: Date.now()
