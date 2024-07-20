@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prioridades</title>
+    <title>Mensagens Recebidas</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="https://i.ibb.co/jZ6rbSp/logo-cabana.png" type="image/png">
     <link rel="apple-touch-icon" sizes="180x180" href="https://i.ibb.co/jZ6rbSp/logo-cabana.png">
@@ -41,16 +41,22 @@
             navigator.serviceWorker.register('/service-worker.js');
         }
 
-        fetch('/manifest.json')
-            .then(response => response.json())
-            .then(manifest => {
-                manifest.start_url = window.location.href;
-                const stringManifest = JSON.stringify(manifest);
-                const blob = new Blob([stringManifest], {type: 'application/json'});
-                const url = URL.createObjectURL(blob);
-                const link = document.querySelector('link[rel="manifest"]');
-                link.setAttribute('href', url);
-            });
+        if (window.location.search.includes('source=pwa')) {
+            const currentUrl = new URL(window.location.href);
+            const newUrl = currentUrl.origin + currentUrl.pathname + currentUrl.hash + currentUrl.search.replace('source=pwa', '');
+            window.location.replace(newUrl);
+        } else {
+            fetch('/manifest.json')
+                .then(response => response.json())
+                .then(manifest => {
+                    manifest.start_url = window.location.href;
+                    const stringManifest = JSON.stringify(manifest);
+                    const blob = new Blob([stringManifest], {type: 'application/json'});
+                    const url = URL.createObjectURL(blob);
+                    const link = document.querySelector('link[rel="manifest"]');
+                    link.setAttribute('href', url);
+                });
+        }
     </script>
 </body>
 </html>
